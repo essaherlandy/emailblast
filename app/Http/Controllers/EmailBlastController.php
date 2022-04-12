@@ -14,7 +14,7 @@ class EmailBlastController extends Controller
 {
     public function index()
     {
-        $getMembers = DB::select("SELECT nama_database FROM member_login WHERE nama_database != '' GROUP BY nama_database");
+        $getMembers = DB::select("SELECT tipe_club FROM `anggota` where tipe_club != '' GROUP BY tipe_club");
         return view('send-email',['getMembers' => $getMembers]);
     }
 
