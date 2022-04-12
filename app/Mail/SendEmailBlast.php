@@ -28,11 +28,19 @@ class SendEmailBlast extends Mailable
      */
     public function build()
     {
-        return $this->from(env("MAIL_FROM_ADDRESS"))
-                    ->subject("EVENT GYM NEST")
-                    ->attach(public_path($this->data['attachment']))
-                    ->view('mail.blast-email', [
-                        'data' => $this->data
-                    ]);
+        if($this->data['attachment'] == ''){
+            return $this->from(env("MAIL_FROM_ADDRESS"))
+                        ->subject("EVENT GYM NEST")
+                        ->view('mail.blast-email', [
+                            'data' => $this->data
+                        ]);
+        }else{
+            return $this->from(env("MAIL_FROM_ADDRESS"))
+                        ->subject("EVENT GYM NEST")
+                        ->attach(public_path($this->data['attachment']))
+                        ->view('mail.blast-email', [
+                            'data' => $this->data
+                        ]);
+        }
     }
 }

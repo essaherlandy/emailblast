@@ -49,15 +49,14 @@ class EmailBlastController extends Controller
             ];
 
             if($user_profiles){
-                $userArray = MemberLogin::query()
-                ->when($request->club != "all", function($query){
-                return $query->where('nama_database', $request->club);
-                })->get()->toArray();
-                dd($userArray);
+                $userArray = DB::table('member_login')->when($request->club != 'all', function ($q) use($request){
+                    return $q->where('nama_database', $request->club);
+                })
+                ->get()->toArray();
+
                 foreach($userArray as $user){
-                    $message->to($user['email'])->subject('Welcome!')->attach(public_path($this->data['attachment']));
+                    Mail::to($user->email)->send(new SendEmailBlast($data));
                 }
-                Mail::to($user->email)->send(new SendEmailBlast($data));
                 return redirect()->route('send-email')->with('success','Email berhasil dikirim');
             }else{
                 return redirect()->route('send-email')->with('error','Email berhasil dikirim');
@@ -99,7 +98,7 @@ class EmailBlastController extends Controller
                 foreach($userArray as $user){
                     Mail::to($user->email)->send(new SendEmailBlast($data));
                 }
-                
+
                 return redirect()->route('send-email')->with('success','Email berhasil dikirim');
             }else{
                 return redirect()->route('send-email')->with('error','Email berhasil dikirim');
